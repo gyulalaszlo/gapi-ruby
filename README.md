@@ -22,16 +22,19 @@ Set the proxy:
 
 ## Collections
 
+Collections are simple wrappers around the resources to support loading
+their index and loading individual elements.
+
     collection = Gapi::collection 'countries'
     collection.config.application_key = API_KEY
 
-    # Fetch a country by id
+Fetch a country by id
 
     data = @collection.get 'GB'
     data['name'] # => 'United Kingdom'
     data['id']   # => 'GB'
 
-    # Load the indices for all countries 
+Load the indices for all countries 
 
     collection.load_index
     collection.count      # => 239
