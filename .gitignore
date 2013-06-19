@@ -1,4 +1,5 @@
 *.gem
 .bundle
+gapi_keys.rb
 Gemfile.lock
 pkg/*

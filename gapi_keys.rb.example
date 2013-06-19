@@ -1,0 +1,3 @@
+# Rename this file to gapi_keys.rb and add your test keys to
+# be able to run the test
+API_KEY = '<YOUR KEY HERE>'
