@@ -6,6 +6,9 @@ module Gapi
     attr_reader :code
     attr_reader :errors
 
+
+    attr_reader :json
+
     def initialize code, body, headers
       @code = code
       @errors = []
@@ -23,8 +26,13 @@ module Gapi
 
     def process_result body, headers
       @json = JSON.parse body
+      #p @code, @json
       if @code != '200'
-        @errors = @json['errors']
+        if @json['errors']
+          @errors = @json['errors']
+        else
+          @errors = ['<ERROR>']
+        end
         return
       end
       process_collection_results

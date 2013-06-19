@@ -23,6 +23,11 @@ module Gapi
     # Access to the used configuration
     attr_reader :config
 
+
+
+    # The page to retrieve
+    attr_accessor :page
+
     # Create a new Request.
     # use Gapi::request() for creation
     def initialize( config )
@@ -44,11 +49,11 @@ module Gapi
       request_data = to_query_json!
       url = URI.parse( request_data['url'] )
       result = nil
+      puts url
       Net::HTTP.start(url.host, url.port, :use_ssl => true) do |http|
         resp = http.get(url.request_uri, request_data['headers'])
         response_code = resp.code
         result = Result.new resp.code, resp.body, resp.to_hash
-        p result
       end
       result
     end
@@ -87,7 +92,9 @@ module Gapi
     end
 
     def query_url
-      "#{config.api_root}/#{@collection}"
+      url = "#{config.api_root}/#{@collection}"
+      url = "#{url}/?page=#{@page}" if @page
+      url
     end
 
 
