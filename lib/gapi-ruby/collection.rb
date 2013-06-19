@@ -78,7 +78,6 @@ module Gapi
       # Parse out the collection
       @count = result.json['count']
       @per_page = result.json['max_per_page']
-
       # store the result
       @results[page] = result.json['results']
     end

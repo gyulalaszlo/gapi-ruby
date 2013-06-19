@@ -2,6 +2,8 @@ require_relative "gapi-ruby/version"
 require_relative "gapi-ruby/config"
 require_relative "gapi-ruby/request"
 
+require_relative "gapi-ruby/cache"
+
 require_relative "gapi-ruby/response"
 require_relative "gapi-ruby/collection"
 

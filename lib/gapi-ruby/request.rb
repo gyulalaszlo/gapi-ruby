@@ -1,3 +1,4 @@
+require 'digest/sha1'
 require 'net/http'
 require 'uri'
 
@@ -53,13 +54,16 @@ module Gapi
       request_data = to_query_json!
       url = URI.parse( request_data['url'] )
       result = nil
-      puts url
-      Net::HTTP.start(url.host, url.port, :use_ssl => true) do |http|
-        resp = http.get(url.request_uri, request_data['headers'])
-        response_code = resp.code
-        result = Result.new resp.code, resp.body, resp.to_hash
+      response_data = config.cache.get get_cache_key do
+        Net::HTTP.start(url.host, url.port, :use_ssl => true) do |http|
+          resp = http.get(url.request_uri, request_data['headers'])
+          response_code = resp.code
+          #result = Result.new resp.code, resp.body, resp.to_hash
+          { 'code' => resp.code, 'body' => resp.body, 'headers' => resp.to_hash}
+        end
       end
-      result
+      result = Result.new response_data['code'], response_data['body'], response_data['headers']
+      return result
     end
 
 
@@ -68,8 +72,14 @@ module Gapi
       to_query_json!
     end
 
+    # Get the key used for caching this request
+    def get_cache_key
+      Digest::SHA1.hexdigest "#{query_url}"
+    end
+
 
     private
+
 
     def to_query_json!
       validate!
