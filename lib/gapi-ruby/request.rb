@@ -44,6 +44,10 @@ module Gapi
       self
     end
 
+    def id id
+      @id = id
+      self
+    end
 
     def run
       request_data = to_query_json!
@@ -93,6 +97,7 @@ module Gapi
 
     def query_url
       url = "#{config.api_root}/#{@collection}"
+      url = "#{url}/#{@id}" if @id
       url = "#{url}/?page=#{@page}" if @page
       url
     end

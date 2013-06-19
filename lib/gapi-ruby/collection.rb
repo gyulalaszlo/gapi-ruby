@@ -20,6 +20,7 @@ module Gapi
       @count = 0
       @results = []
       @indices = []
+      @elements = {}
     end
 
 
@@ -29,6 +30,12 @@ module Gapi
       self
     end
 
+    
+    # Get a single element by id
+    def get id
+      get_single id
+      @elements[id]
+    end
 
     private
 
@@ -37,7 +44,6 @@ module Gapi
       get_page()
       if @count > @per_page
         last_page = (@count / @per_page.to_f).ceil
-          
         for i in 2..last_page
           get_page i
         end
@@ -46,8 +52,18 @@ module Gapi
     end
 
 
+    def get_single id
+      req = Request.new( config ).query(@name).id(id)
+      result = req.run
+      # Check the result
+      if result.has_errors?
+        raise AccessError.new("Cannot retrieve collection")
+      end
+      @elements[id] = result.json
+    end
+
+
     def get_page( page=1 )
-      puts "loading page #{page}"
       req = Request.new( config )
       req.query @name
       req.page = page 
@@ -74,7 +90,6 @@ module Gapi
       @indices = @results.flatten
       # remove the leading nil (because page_count starts from 1)
       @indices.shift
-      p @indices
     end
 
   end
